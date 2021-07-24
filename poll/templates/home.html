@@ -10,26 +10,44 @@
         @import url('https://fonts.googleapis.com/css2?family=Poppins:wght@200;300;400;500;600;700&display=swap');
 
         *{
-            margin: 0;
-            padding: 0;
-            box-sizing: border-box;
             font-family: 'Poppins', sans-serif;
         }
-
         body {
+            background-color: #6665ee;
+        }
+        h1 , h3 , p{
+            text-align: center;
+            word-wrap: break-word;
+        }
+        /* .poll {
+            margin: 1px auto;
+        } */
+        .column {
+            border: 1px dashed #8b8bee;
+            height: 35vh;
+        }
+        .button {
             display: flex;
             align-items: center;
             justify-content: center;
-            background: #6665ee;
         }
+
     </style>
     <title>Poll Application</title>
 </head>
-<body>
+<body class="container">
     <h1>Polls</h1>
-    <div class="poll mt-2">
+    <div class="poll row">
         {% for poll in poll %}
-        <button class="btn btn-primary">{{ poll.name }}</button>
+        <div class="col-xl-3 col-lg-4 col-md-6 col-sm-12 mt-2 column">
+            <h3 class="mt-1">{{ poll.name }}</h3>
+            <div class="topic">
+                <p>{{ poll.topic | linebreaksbr  }}</p>
+            </div>
+            <div class=" button">
+                <a href="/{{ poll.id }}" class="btn btn-primary btn-lg btn-block {% if poll.question_set.count == 0 %} disabled {% endif %}">Enter</a>
+            </div>
+        </div>    
         {% endfor %}
     </div>
 </body>
