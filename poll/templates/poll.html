@@ -1,0 +1,64 @@
+{% load static %}
+<!DOCTYPE html>
+<!-- Coding By CodingNepal - youtube.com/codingnepal -->
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Poll Applicatio</title>
+    <link rel="stylesheet" href="{% static 'css/poll-style.css' %}">
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+</head>
+<body>
+    <div class="wrapper">
+        <header>{{ poll.name }}</header>
+        <div class="poll-area">
+        {% for q in poll.question_set.all %}
+        <p>{{ q.text }}</p>
+            {% for a in q.answer_set.all %}
+            <input type="checkbox" name="{{ q.poll.name }}" id="{{ a.id }}">
+            <label for="{{ a.id }}" class="{{ a.id }} opt-1" data-id="{{ a.id }}">
+                <div class="row">
+                <div class="column">
+                    <span class="circle"></span>
+                    <span class="text">{{ a.text }}</span>
+                </div>
+                <span class="percent">{% if a.score > 0%}{{ a.score }}{% endif %}</span>
+                </div>
+                <div class="progress" style='--w:{{ a.score }};'></div>
+            </label>    
+            <script>
+                $(document).ready(function() {
+                    $(".{{ a.id }}").on("click" , function() {
+                        var id = $(".{{ a.id }}").attr("data-id")
+                        console.log(id) 
+                        $(".poll-area").hide(5000)
+                        $(".poll-submitted-area").removeAttr('style')                
+                        $.ajax({
+                            type: "GET",
+                            url:"/" + id + "/data",
+                            data: {
+                                id : id,
+                            },
+                            success: function (response) {
+                                console.log(response.data)
+                            }
+                        });
+                    })
+                })
+            </script>
+            
+            {% endfor %}
+        {% endfor %}
+        </div>
+        
+        <div class="poll-submitted-area" style="display: none;">
+            <p>Thanks for Your Voting</p>
+            <a href="/" style="text-decoration: none; float: right;">go back to home</a>
+        </div>
+    </div>
+
+    <script src="{% static 'js/poll-js.js' %}"></script>
+
+</body>
+</html>
